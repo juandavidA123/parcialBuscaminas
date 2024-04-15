@@ -1,0 +1,175 @@
+html{
+    font-family: monospace;
+}
+
+body{
+    /* background-color: rgb(189, 189, 189); */
+    background-image: radial-gradient(circle, rgb(254, 224, 139), rgb(37, 0, 0));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/*
+paleta  colores:
+https://colorhunt.co/palette/9a3b3bc08261e2c799f2ecbe
+rgb(154, 59, 59)
+rgb(192, 130, 97)
+rgb(226, 199, 153)
+rgb(242, 236, 190)
+*/
+.contendorPrincipal{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+}
+
+.grid{
+    width: 200px;  /*para calcularlo es 20px * ancho */
+    height: 200px; /*para calcularlo es 20px * alto */
+    border: 10px solid rgb(154, 59, 59);
+    /* border-radius: 6px; */
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 15px;
+    box-shadow: 7px 7px 20px rgb(242, 236, 190);
+}
+
+.cuadraditos{ /*son los .grid div*/
+    width: 40px; /*esto no pude cambiarlo desde el Javascript, este sí toca cambiarlo desde acá*/
+    height: 40px;
+    border: 2px rgb(154, 59, 59) inset ;
+    box-sizing:border-box;
+    background-color: rgb(242, 236, 190);
+}
+
+.cuadraditos:hover{
+    cursor: pointer;
+    border: 4px rgb(122, 93, 89) inset ;
+}
+
+.contenedorIndividualCuadraditos{
+    width: 40px;
+    height: 40px;
+    border: 1px rgb(154, 59, 59) solid ;
+    box-sizing:border-box;
+
+    display: flex;
+    justify-content: center; /* Centrado horizontal */
+    align-items: center;
+}
+
+.textosDimensiones{
+    font-size: 20px;
+}
+
+.camposDimensiones{
+    font-size: 18px;
+
+    height: 28px;
+    width: 60px;
+
+    padding: 5px;
+    border-radius: 5px;
+    border: 2px rgb(122, 93, 89) solid;
+}
+
+#tituloJuego{
+    font-size: 45px;
+    /* margin: 20px; */
+}
+
+#contenedorCantMinas{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    margin-block: -10px;
+}
+
+#valorCantidadMinas{
+    margin-inline: 10px;
+}
+
+#botonCrearCampoMinado{
+    font-weight: bold;
+
+    height: 35px;
+    width: 200px;
+
+    margin-block: 15px;
+
+    background-image: linear-gradient(to right, #01bbab, #ffffff);
+    border: 4px rgb(0, 0, 0) outset;
+    
+}
+
+#botonCrearCampoMinado:hover{
+    cursor: pointer;
+    background-image: linear-gradient(to left, #01bbab, #ffffff);
+    color: rgba(0, 0, 0, 0.8);
+    border: 4px rgb(255, 255, 255) inset;
+}
+
+#cuadroPerdiste{
+    font-size: 20px;
+    border: 2px black solid;
+    /* margin-inline: 50px; */
+    padding-inline: 20px;
+    padding-block: 10px;
+    color: white;
+    background-color: rgb(226, 19, 0);
+}
+
+#cuadroCambiarDimensiones{
+    margin-inline: 30px;
+    padding: 30px;
+    border: 4px rgb(154, 59, 59) solid ;
+}
+
+#botonCambioDimensiones{
+    font-weight: bold;
+    
+    width: 100px;
+    height: 40px;
+
+    margin-block: 10px;
+    padding-inline: 10px;
+
+    background-image: linear-gradient(to right, #01bbab, #ffffff);
+    border: 4px rgb(0, 0, 0) outset;
+    
+    
+}
+#botonCambioDimensiones:hover{
+    cursor: pointer;
+    background-image: linear-gradient(to left, #01bbab, #ffffff);
+    color: rgba(0, 0, 0, 0.8);
+    border: 4px rgb(255, 255, 255) inset;
+}
+
+#simbolosMinas{
+    background-color: transparent;
+}
+
+/* #campoAlto{
+    height: 25px;
+    width: 50px;
+    border-radius: 5px;
+    border: 2px rgb(122, 93, 89) solid;
+}
+
+#campoAncho{
+    height: 25px;
+    width: 50px;
+    border-radius: 5px;
+    border: 2px rgb(122, 93, 89) solid;
+} */
+
+#valorMinasRestantes{
+    font-size: 20px;
+    margin-inline: 10px;
+}
