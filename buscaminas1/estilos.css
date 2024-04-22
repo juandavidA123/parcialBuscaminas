@@ -1,3 +1,12 @@
+/*
+paleta  colores inicial:
+https://colorhunt.co/palette/9a3b3bc08261e2c799f2ecbe
+rgb(154, 59, 59)
+rgb(192, 130, 97)
+rgb(226, 199, 153)
+rgb(242, 236, 190)
+*/
+
 html{
     font-family: monospace;
 }
@@ -10,14 +19,6 @@ body{
     justify-content: center;
 }
 
-/*
-paleta  colores:
-https://colorhunt.co/palette/9a3b3bc08261e2c799f2ecbe
-rgb(154, 59, 59)
-rgb(192, 130, 97)
-rgb(226, 199, 153)
-rgb(242, 236, 190)
-*/
 .contendorPrincipal{
     display: flex;
     justify-content: center;

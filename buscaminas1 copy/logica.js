@@ -3,6 +3,9 @@
 /* historial:
 SE ARREGLÓ LO DE QUE CUANDO SE HAGA CLICK DERECHO EN UNA CASILLA, NO SE PUEDA HACER CLICK NORMAL EN ELLA 
 
+Se logró hacer que se muestre el numero de minas que hay alrededor de una casilla al dar click. 22/04/24 00:51
+
+SE LOGRO CAMBIAR LA IMAGEN DE LAS MINAS
 */
 
 /* 
@@ -14,13 +17,17 @@ SE ARREGLÓ LO DE QUE CUANDO SE HAGA CLICK DERECHO EN UNA CASILLA, NO SE PUEDA H
 
 let grid = document.querySelector(".grid");
 let cuadroPerdio = document.getElementById("cuadroPerdiste");
+let cuadroGano = document.getElementById("cuadroGanaste");
+
+/* TERMINAR LO DE CUADRO GANÓ. CUANDO EL SE REVELEN TODOS LOS ESPACIOS SIN MINAS SE DEBE MOSTRAR EL CUADRO GANÓ */
+
 let contenedorMain = document.getElementById("mainContenedor");
 let numeroMinasRestantes = document.getElementById("valorMinasRestantes")
 // let cuadraditos = document.get
 const izquierdoHabilitado = []; //booleano para saber si el click izquierdo se puede usar en cada una de las casillas del tablero
 
-let alto = 5;
-let ancho = 5;
+let alto ;
+let ancho ;
 
 let dimensionesCuadraditos;
 
@@ -33,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function (){
     colorearCuadriculaReiniciada()
     mainContenedor.style.display = "none";
     cuadroPerdio.style.display = "none";
+    cuadroGano.style.display = "none";
 
 });
 
@@ -126,6 +134,7 @@ function limpiarTodo(){
 
     //se esconde el cuadro de perdió para que solo aparezca al perder
     cuadroPerdio.style.display = "none";
+    cuadroGano.style.display = "none";
 }
 
 function crearTablero(){
@@ -184,9 +193,12 @@ function colorearCuadrosMinas(){
     }
 
     arregloPosicionesMinas = colocarMinas();
-    // for (let x = 0; x < arregloPosicionesMinas.length; x++) {
-    //     document.getElementById('cuadrado'+ arregloPosicionesMinas[x].join(",")).style.backgroundColor = 'rgb(192, 130, 97)';
-    // }
+
+    /* DONDE SE PINTAN LOS CUADROS DE LAS BOMBAS PARA TRABAJAR MÁS FACILMENTE EN EL PROYECTO. 
+    SE COMENTA CUANDO SE VA A PROBAR DE VERDAD EL JUEGO*/
+    for (let x = 0; x < arregloPosicionesMinas.length; x++) {
+        document.getElementById('cuadrado'+ arregloPosicionesMinas[x].join(",")).style.backgroundColor = 'rgb(192, 130, 97)';
+    }
 }
 
 
@@ -202,13 +214,7 @@ function colocarMinas(){
 
     let arregloPosMinas = [];
 
-    for (let i = 0; i < alto; i++) {
-        matrizTablero[i] = [];
-        for (let j = 0; j < ancho; j++) {
-            matrizTablero[i][j] = [i, j];
-        }
-        
-    }
+    
     
     /* este booleano se crea para cuando se repita, reemplazarla por otra posición dentro del WHILE */
     let flagEstaRepetido = false;
@@ -267,10 +273,20 @@ function colocarMinas(){
         contador = 0;
     }
 
+    for (let i = 0; i < alto; i++) {
+        matrizTablero[i] = [];
+        for (let j = 0; j < ancho; j++) {
+            matrizTablero[i][j] = [i, j];
+            console.log("matrizTablero: "+matrizTablero[i][j] +"\n");
+            console.log("arrposminas:"+arregloPosMinas[i]);
+        }
+    }
 
     //------PARTE DONDE SE AGREGAN LOS EventListeners A LOS BOTONES--------
     
     const banderaFuePuesta = []; //un arreglo de booleanos para poner y quitar banderas
+
+    let flagCliqueoPorPrimeraVez = false;
     
     for (let indice = 1; indice <= ancho*alto; indice++) {
         banderaFuePuesta[indice] = false;
@@ -280,7 +296,7 @@ function colocarMinas(){
         for(let j=0; j < ancho; j++){
             /* se selecciona cada contenedor por ID para añadirle el boton correspondiente */
             var contenedorIndividualActual = document.getElementById('contenedorIndividual' + i+','+j);
-
+            
             //para click izquierdo (revelar cuadro)
             /* funciona, la cosa es recordar que cuando se usa la función como parámetro, no ponerla con los paréntesis ()*/
             contenedorIndividualActual.addEventListener("click", function(){
@@ -341,12 +357,16 @@ function colocarMinas(){
                         for (let index = 0; index < arregloPosMinas.length; index++) {
                             
                             botonMinadoActual = document.getElementById("cuadrado"+arregloPosMinas[index].join())
-                            document.getElementById('cuadrado'+arregloPosMinas[index].join()).style.backgroundColor = 'rgb(226, 19, 0)';
+                            // document.getElementById('cuadrado'+arregloPosMinas[index].join()).style.backgroundColor = 'rgb(226, 19, 0)';
+                            document.getElementById('cuadrado'+arregloPosMinas[index].join()).style.backgroundImage = "url('mina marina rust.png')";
+                            document.getElementById('cuadrado'+arregloPosMinas[index].join()).style.backgroundSize = 'cover';
+
+
 
                             let simboloMina = document.createElement("div");
                             simboloMina.classList.add('simbolosMinas');
                             simboloMina.id = 'mina' + arregloPosMinas[index].join(); //le pone de ID a cada cuadro su propia coordenada en la matriz
-                            simboloMina.textContent = '💣'; //para mostrar el numero de cada casilla
+                            // simboloMina.textContent = '💣'; //para mostrar el numero de cada casilla
                             simboloMina.style.fontSize = (140/ancho)+"px";
 
                             botonMinadoActual.appendChild(simboloMina);
@@ -355,19 +375,185 @@ function colocarMinas(){
                             cuadroPerdio.style.display = "flex";
                         }
                     }else{
-                            /* sino se pierde al clickear (osea si no cliquea en una posicion donde hay una mina), simplemente elimina el
-                            boton y revela la carita */
+                        /* sino se pierde al clickear (osea si no cliquea en una posicion donde hay una mina), simplemente elimina el
+                        boton y revela la carita */
 
-                            console.log("Eliminando boton de " + contenedorIndividual.id); //this.id.slice(20,23)
-                            console.log("boton id: " + botonActual.id);
-                            contenedorIndividual.removeChild(botonActual);
+                        //----------------------SECCION ELEGIR QUÉ NUMERO PONER-------------------------------
 
-                            let elementoReemplazante = document.createElement("div");
-                            elementoReemplazante.classList.add('ContenedorIndividualCaritas');
-                            elementoReemplazante.id = 'contenedorIndividual-' + contenedorIndividual.id;
-                            elementoReemplazante.textContent = '😃'; //👻
-                            elementoReemplazante.style.fontSize = (140/ancho)+"px";
-                            contenedorIndividual.appendChild(elementoReemplazante);
+                        //NOTA: METER ESTE PROCEDIMIENTO EN UNA FUNCION PARA QUE SEA MAS ORDENADO
+
+                        console.log("pos: "+typeof parseInt(botonActual.id.slice(8)));
+                        // colocarNumeros(arregloPosMinas, i, j);
+
+                        let contadorMinasAlrededor = 0;
+
+                        /* si contadorMinasAlrededor es mayor que este, entonces es porque no hubo un aumento de contador, 
+                        y entonces no se encontraron minas en la posicion que se está evaluando, por lo que puede mostrarse
+                        si sin problema de que llegue a mostrar una mina */
+                        let contadorCambioEnContadorMinas = contadorMinasAlrededor; 
+
+                        //arriba izquierda
+                        let posArribaIzq  = (i-1)+ "," +(j-1);
+                        for (let x = 0; x < arregloPosMinas.length; x++) {
+                            
+                            console.log("arrgloposminas: "+ arregloPosMinas[x].toString());
+                            console.log(posArribaIzq);
+                            if (posArribaIzq.toString() == arregloPosMinas[x].toString()) {
+                                contadorMinasAlrededor++;
+                                console.log("mina upleft");
+                            }
+                        }
+
+
+                        /* ME RINDO NO QUIERO HACERLO ASI PORQUE ES DEMASIADO EXTENSO. LO IDEAL SERIA COLOCAR LOS NUMEROS AL PRINCIPIO
+                        CUANDO SE COLOCAN LAS MINAS E IRLOS REVELANDO, NO IRLOS CREANDO COMO SE ESTÁ HACIENDO AHORA PERO PUES YA QUÉ */
+
+                        // if(contadorMinasAlrededor > contadorCambioEnContadorMinas || flagCliqueoPorPrimeraVez == true){
+                        //     contadorCambioEnContadorMinas = contadorMinasAlrededor;
+                        // }else if(contadorMinasAlrededor <= contadorCambioEnContadorMinas && flagCliqueoPorPrimeraVez == false){
+
+                        //     var contenedorIndividualAdyacente = document.getElementById('contenedorIndividual' + posArribaIzq);
+                        //     var botonABorrar = contenedorIndividualAdyacente.querySelector("button");
+
+                        //     contenedorIndividualAdyacente.removeChild(botonABorrar);
+
+
+
+                        //     let posicionLibre = document.createElement("div");
+                        //     posicionLibre.classList.add('ContenedorIndividualCaritas');
+                        //     posicionLibre.id = 'elementoNumero-' + posArribaIzq;
+
+
+
+
+                        //     posicionLibre.textContent = "👻"; //👻
+
+                        //     posicionLibre.style.fontSize = (140/ancho)+"px";
+                        //     contenedorIndividualAdyacente.appendChild(posicionLibre);
+                        // }
+                        console.log("--");
+
+                        //arriba
+                        let posArriba  = (i-1)+ "," +j;
+                        for (let x = 0; x < arregloPosMinas.length; x++) {
+                            
+                            console.log("arrgloposminas: "+ arregloPosMinas[x].toString());
+                            console.log(posArriba);
+                            if (posArriba.toString() == arregloPosMinas[x].toString()) {
+                                contadorMinasAlrededor++;
+                                console.log("mina arriba");
+                            }
+                        }
+                        console.log("--");
+
+                        //arriba derecha
+                        let posArribaDer  = (i-1)+ "," +(j+1);
+                        for (let x = 0; x < arregloPosMinas.length; x++) {
+                            
+                            console.log("arrgloposminas: "+ arregloPosMinas[x].toString());
+                            console.log(posArribaDer);
+                            if (posArribaDer.toString() == arregloPosMinas[x].toString()) {
+                                contadorMinasAlrededor++;
+                                console.log("mina upright");
+                            }
+                        }
+                        console.log("--");
+
+                        //izquierda
+                        let posIzq  = i+ "," +(j-1);
+                        for (let x = 0; x < arregloPosMinas.length; x++) {
+                            
+                            console.log("arrgloposminas: "+ arregloPosMinas[x].toString());
+                            console.log(posIzq);
+                            if (posIzq.toString() == arregloPosMinas[x].toString()) {
+                                contadorMinasAlrededor++;
+                                console.log("mina izq");
+                            }
+                        }
+                        console.log("--");
+
+                        //derecha
+                        let posDer  = i+ "," +(j+1);
+                        for (let x = 0; x < arregloPosMinas.length; x++) {
+                            
+                            console.log("arrgloposminas: "+ arregloPosMinas[x].toString());
+                            console.log(posDer);
+                            if (posDer.toString() == arregloPosMinas[x].toString()) {
+                                contadorMinasAlrededor++;
+                                console.log("mina der");
+                            }
+                        }
+                        console.log("--");
+
+                        //abajo izquierda
+                        let posAbajoIzq  = (i+1)+ "," +(j-1);
+                        for (let x = 0; x < arregloPosMinas.length; x++) {
+                            
+                            console.log("arrgloposminas: "+ arregloPosMinas[x].toString());
+                            console.log(posAbajoIzq);
+                            if (posAbajoIzq.toString() == arregloPosMinas[x].toString()) {
+                                contadorMinasAlrededor++;
+                                console.log("mina downleft");
+                            }
+                        }
+                        console.log("--");
+
+                        //abajo
+                        let posAbajo  = (i+1)+ "," +j;
+                        for (let x = 0; x < arregloPosMinas.length; x++) {
+                            
+                            console.log("arrgloposminas: "+ arregloPosMinas[x].toString());
+                            console.log(posAbajo);
+                            if (posAbajo.toString() == arregloPosMinas[x].toString()) {
+                                contadorMinasAlrededor++;
+                                console.log("mina abajo");
+                            }
+                        }
+                        console.log("--");
+
+                        //abajo derecha
+                        let posAbajoDer  = (i+1)+ "," +(j+1);
+                        for (let x = 0; x < arregloPosMinas.length; x++) {
+                            
+                            console.log("arrgloposminas: "+ arregloPosMinas[x].toString());
+                            console.log(posAbajoDer);
+                            if (posAbajoDer.toString() == arregloPosMinas[x].toString()) {
+                                contadorMinasAlrededor++;
+                                console.log("mina downright");
+                            }
+                        }
+                        console.log("--");
+                        
+                        let numeroFinal = contadorMinasAlrededor;
+
+
+                        contenedorIndividual.removeChild(botonActual);
+
+                        let elementoNumero = document.createElement("div");
+                        elementoNumero.classList.add('ContenedorIndividualCaritas');
+                        elementoNumero.id = 'elementoNumero-' + contenedorIndividual.id;
+
+                        elementoNumero.textContent = numeroFinal; //👻
+
+                        elementoNumero.style.fontSize = (140/ancho)+"px";
+                        contenedorIndividual.appendChild(elementoNumero);
+                                    
+                        contadorMinasAlrededor = 0;
+                        numeroFinal = 0;
+                        //------------------------------------------------------------------------------------
+
+
+                        console.log("Eliminando boton de " + contenedorIndividual.id); //this.id.slice(20,23)
+                        console.log("boton id: " + botonActual.id);
+                        
+                        // contenedorIndividual.removeChild(botonActual);
+
+                        // let elementoReemplazante = document.createElement("div");
+                        // elementoReemplazante.classList.add('ContenedorIndividualCaritas');
+                        // elementoReemplazante.id = 'contenedorIndividual-' + contenedorIndividual.id;
+                        // elementoReemplazante.textContent = '😃'; //👻
+                        // elementoReemplazante.style.fontSize = (140/ancho)+"px";
+                        // contenedorIndividual.appendChild(elementoReemplazante);
                     }
                     
                     
@@ -477,6 +663,8 @@ function colocarMinas(){
                 /* se reinicia el contador de banderas para que se esté actualizando el numero real cada que se haga click
                 y no se acumule al estarse sumando dentro de los ciclos */
                 contadorBanderas = 0; 
+
+                // if(numeroMinasRestantes.innerHTML == 0)
             });
 
         }
@@ -486,3 +674,56 @@ function colocarMinas(){
 
     return arregloPosMinas;
 }
+
+// function colocarNumeros(arregloPosicionMinas, indexi, indexj){
+
+//     console.log("pos: "+typeof parseInt(botonActual.id.slice(8)));
+
+//                 //arriba izquierda
+//                 let posArribaIzq  = ""
+
+
+//                 //arriba
+//                 let posArriba
+
+
+//                 //arriba derecha
+//                 let posArribaDer
+
+
+//                 //derecha
+//                 let posDer
+
+
+//                 //abajo derecha
+//                 let posAbajoDer
+
+
+//                 //abajo
+//                 let posAbajo
+
+
+//                 //abajo izquierda
+//                 let posAbajoIzq
+
+
+//                 //izquierda
+//                 let posIzq
+
+
+//                 contenedorIndividual.removeChild(botonActual);
+
+//                 let elementoReemplazante = document.createElement("div");
+//                 elementoReemplazante.classList.add('ContenedorIndividualCaritas');
+//                 elementoReemplazante.id = 'contenedorIndividual-' + contenedorIndividual.id;
+//                 elementoReemplazante.textContent = '😃'; //👻
+//                 elementoReemplazante.style.fontSize = (140/ancho)+"px";
+//                 contenedorIndividual.appendChild(elementoReemplazante);
+
+//     // for(i=0; i< alto; i++){
+//     //     for (let j = 0; j < ancho; j++) {
+            
+            
+//     //     }
+//     // }
+// }

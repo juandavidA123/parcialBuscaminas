@@ -1,3 +1,12 @@
+/*
+paleta  colores:
+https://colorhunt.co/palette/9a3b3bc08261e2c799f2ecbe
+rgb(154, 59, 59)
+rgb(192, 130, 97)
+rgb(226, 199, 153)
+rgb(242, 236, 190)
+*/
+
 html{
     font-family: monospace;
 }
@@ -10,14 +19,6 @@ body{
     justify-content: center;
 }
 
-/*
-paleta  colores:
-https://colorhunt.co/palette/9a3b3bc08261e2c799f2ecbe
-rgb(154, 59, 59)
-rgb(192, 130, 97)
-rgb(226, 199, 153)
-rgb(242, 236, 190)
-*/
 .contendorPrincipal{
     display: flex;
     justify-content: center;
@@ -122,6 +123,16 @@ rgb(242, 236, 190)
     padding-block: 10px;
     color: white;
     background-color: rgb(226, 19, 0);
+}
+
+#cuadroGanaste{
+    font-size: 20px;
+    border: 2px black solid;
+    /* margin-inline: 50px; */
+    padding-inline: 20px;
+    padding-block: 10px;
+    color: white;
+    background-color: #01bbab;
 }
 
 #cuadroCambiarDimensiones{
